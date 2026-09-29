@@ -6,6 +6,8 @@
 <script>document.documentElement.classList.add("js")</script>
 <title>Nordic Boxing Center</title>
 <meta name="description" content="Nordic Boxing Center – boksing for nybegynnere og videregående i Kristiansand. Lumberveien 29C, 4621 Kristiansand.">
+<link rel="icon" type="image/png" href="/assets/icon-192.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -44,11 +46,8 @@ a{color:inherit;text-decoration:none}
 .header{position:fixed;inset:0 0 auto;z-index:50;transition:background .3s,border-color .3s,backdrop-filter .3s;border-bottom:1px solid transparent}
 .header.scrolled{background:rgba(10,22,40,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-color:var(--line)}
 .nav{display:flex;align-items:center;justify-content:space-between;height:72px}
-.brand{display:flex;align-items:center;gap:12px;font-family:var(--display);letter-spacing:.08em;text-transform:uppercase;line-height:1}
-.brand-mark{width:40px;height:40px;border-radius:10px;background:var(--grey-50);display:grid;place-items:center;flex-shrink:0}
-.brand-mark svg{width:26px;height:26px}
-.brand b{display:block;font-size:18px;font-weight:700;color:#fff}
-.brand small{display:block;font-size:11px;font-weight:500;color:var(--grey-400);letter-spacing:.22em;margin-top:3px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;line-height:1}
+.brand-logo{display:block;height:52px;width:auto;border-radius:8px;background:#fff}
 .menu{display:flex;align-items:center;gap:6px;list-style:none}
 .menu a{padding:10px 14px;font-size:14px;font-weight:500;color:var(--grey-200);border-radius:8px;transition:color .2s,background .2s}
 .menu a:hover{color:#fff;background:rgba(255,255,255,.05)}
@@ -81,7 +80,7 @@ a{color:inherit;text-decoration:none}
 .hero-grid{position:relative;z-index:2;display:grid;grid-template-columns:1.15fr .85fr;gap:56px;align-items:center}
 /* Background video from the club's original site (YouTube), with a navy shade for legible text */
 .hero-video{position:absolute;inset:0;overflow:hidden;background:var(--navy-900) center/cover no-repeat;filter:saturate(.55)}
-.hero-video iframe{position:absolute;top:50%;left:50%;width:max(125%,222vh);height:max(125%,70.3vw);transform:translate(-50%,-50%);border:0;pointer-events:none;opacity:0;transition:opacity 1s ease}
+.hero-video iframe{position:absolute;top:50%;left:50%;width:max(125%,222vh);height:max(125%,70.3vw);transform:translate(-50%,-50%);border:0;pointer-events:none;opacity:0;transition:opacity .5s ease}
 .hero-video.playing iframe{opacity:1}
 .hero-shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(6,14,26,.93) 0%,rgba(10,22,40,.8) 45%,rgba(10,22,40,.5) 100%),linear-gradient(0deg,rgba(10,22,40,.95) 0%,transparent 35%)}
 .eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:13px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--steel-soft)}
@@ -284,10 +283,7 @@ footer{border-top:1px solid var(--line);padding:40px 0;background:var(--navy-950
 <header class="header" id="header">
   <nav class="wrap nav" aria-label="Hovedmeny">
     <a href="#top" class="brand" aria-label="Nordic Boxing Center – til toppen">
-      <span class="brand-mark" aria-hidden="true">
-        <svg viewBox="0 0 32 32" fill="#0a1628"><path d="M12 4.5c-3.6 0-6.5 2.9-6.5 6.5v6.2c0 1.3.5 2.5 1.4 3.4l1.6 1.6V26c0 .8.7 1.5 1.5 1.5h8.5c.8 0 1.5-.7 1.5-1.5v-3.1l2.1-2.3c1-1.1 1.5-2.5 1.5-4V12.5c0-1.9-1.6-3.5-3.5-3.5h-.6C19.2 6.4 16.9 4.5 14 4.5h-2zm-.5 4h5c1.7 0 3 1.3 3 3v1h-8v-4zm-2 21h12v1.5h-12z"/></svg>
-      </span>
-      <span><b>Nordic</b><small>Boxing Center</small></span>
+      <img class="brand-logo" src="/assets/logo.png" alt="Nordic Boxing Center" width="480" height="317">
     </a>
     <ul class="menu" id="menu">
       <li><a href="#tilbud">Våre tilbud</a></li>
@@ -685,7 +681,11 @@ footer{border-top:1px solid var(--line);padding:40px 0;background:var(--navy-950
             setInterval(() => { if (p.getCurrentTime && p.getCurrentTime() >= LOOP_AT) p.seekTo(START, true); }, 100);
           },
           onStateChange: (e) => {
-            if (e.data === YT.PlayerState.PLAYING) box.classList.add("playing");
+            // Show the video only while it actually plays, so YouTube's own play/pause
+            // overlays (e.g. when a phone blocks autoplay) never appear over the still frame.
+            const S = YT.PlayerState;
+            if (e.data === S.PLAYING) box.classList.add("playing");
+            else if (e.data !== S.BUFFERING) box.classList.remove("playing");
             // Never stay stopped: resume after a pause (e.g. background tab) or an unexpected end.
             if (e.data === YT.PlayerState.ENDED) e.target.seekTo(START, true);
             if (e.data === YT.PlayerState.PAUSED || e.data === YT.PlayerState.ENDED) e.target.playVideo();
