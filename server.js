@@ -37,7 +37,13 @@ app.use(sessions());
 app.use(join);
 app.use(admin);
 app.use(mockRoutes);
-app.use(express.static(joinPath(ROOT, "public"), { extensions: ["html"] }));
+app.use(express.static(joinPath(ROOT, "public"), {
+  extensions: ["html"],
+  // Media rarely changes: let browsers reuse video/images for a day instead of re-downloading.
+  setHeaders: (res, path) => {
+    if (/\.(mp4|jpg|jpeg|png|webp)$/i.test(path)) res.setHeader("Cache-Control", "public, max-age=86400");
+  },
+}));
 
 app.use((err, req, res, next) => {
   console.error(err);
