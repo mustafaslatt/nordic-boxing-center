@@ -1,0 +1,18 @@
+# Render Blueprint: New → Blueprint → choose this repository.
+# Free plan: sleeps after 15 min idle and has no persistent disk (the SQLite database
+# resets on every restart). BankID, Vipps and card run in test mode until keys are added.
+services:
+  - type: web
+    name: nordic-boxing-center
+    runtime: node
+    plan: free
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /api/config
+    envVars:
+      - key: NODE_VERSION
+        value: "24"
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false

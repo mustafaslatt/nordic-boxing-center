@@ -3,12 +3,14 @@ import { resolve } from "node:path";
 const env = process.env;
 export const ROOT = resolve(import.meta.dirname, "..");
 const port = Number(env.PORT) || 5178;
-const publicUrl = (env.PUBLIC_URL || `http://localhost:${port}`).replace(/\/$/, "");
+// Render sets RENDER_EXTERNAL_URL automatically, so no PUBLIC_URL is needed there.
+const publicUrl = (env.PUBLIC_URL || env.RENDER_EXTERNAL_URL || `http://localhost:${port}`).replace(/\/$/, "");
 
 export const config = {
   port,
   publicUrl,
   production: env.NODE_ENV === "production",
+  behindProxy: env.NODE_ENV === "production" || !!env.RENDER,
   secureCookies: publicUrl.startsWith("https://"),
   dbFile: resolve(ROOT, env.DB_FILE || "data/nbc.sqlite"),
 

@@ -22,7 +22,7 @@ if (!db.prepare("SELECT 1 FROM admins LIMIT 1").get()) {
 
 const app = express();
 app.disable("x-powered-by");
-if (config.production) app.set("trust proxy", 1);
+if (config.behindProxy) app.set("trust proxy", 1); // real client IPs for login rate limiting
 
 app.use((req, res, next) => {
   res.setHeader("X-Content-Type-Options", "nosniff");
