@@ -15,7 +15,8 @@
 body{min-height:100vh;background:radial-gradient(900px 500px at 90% 0%,rgba(35,66,107,.45),transparent 60%),var(--navy-900)}
 .top{display:flex;align-items:center;justify-content:space-between;max-width:880px;margin:0 auto;padding:22px 16px}
 .brand{display:flex;align-items:center;gap:12px;text-decoration:none;line-height:1}
-.brand-logo{display:block;width:60px;height:60px;border-radius:8px;background:#fff}
+.brand-logo{display:block;width:80px;height:80px;border-radius:10px;background:#fff}
+@media (max-width:640px){.brand-logo{width:64px;height:64px}}
 .back{font-size:14px;color:var(--grey-400);text-decoration:none}
 .back:hover{color:#fff}
 .wrap{max-width:880px;margin:0 auto;padding:8px 16px 80px}
@@ -97,7 +98,7 @@ body{min-height:100vh;background:radial-gradient(900px 500px at 90% 0%,rgba(35,6
 
 <header class="top">
   <a href="/" class="brand" aria-label="Nordic Boxing Center – forsiden">
-    <img class="brand-logo" src="/assets/logo.jpg" alt="Nordic Boxing Center" width="459" height="459">
+    <img class="brand-logo" src="/assets/nbc-logo.jpg" alt="Nordic Boxing Center" width="320" height="320">
   </a>
   <a href="/" class="back">← Til forsiden</a>
 </header>
