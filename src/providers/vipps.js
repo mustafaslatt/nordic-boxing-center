@@ -45,7 +45,7 @@ async function api(method, path, body, idempotencyKey) {
 export async function createAgreement({ contract, productName, phone, returnUrl, agreementUrl }) {
   if (mock.vipps) {
     const agreementId = `mock-agr-${randomUUID().slice(0, 8)}`;
-    mockAgreements.set(agreementId, { status: "PENDING", returnUrl });
+    mockAgreements.set(agreementId, { status: "PENDING", returnUrl, amount: contract.price_ore, productName, phone: String(phone || "").replace(/\D/g, "").slice(-8) });
     return { agreementId, confirmationUrl: `/mock/vipps?id=${agreementId}` };
   }
   const digits = String(phone || "").replace(/\D/g, "");
@@ -65,6 +65,12 @@ export async function createAgreement({ contract, productName, phone, returnUrl,
     },
   }, `agreement-${contract.number}-${Date.now()}`);
   return { agreementId: res.agreementId, confirmationUrl: res.vippsConfirmationUrl };
+}
+
+// Mock-only: what the simulated Vipps page shows.
+export function mockInfo(agreementId) {
+  const a = mockAgreements.get(agreementId);
+  return a && a.status === "PENDING" ? { amount: a.amount, productName: a.productName, phone: a.phone } : null;
 }
 
 // Mock-only: the simulated Vipps page approves or rejects the agreement.

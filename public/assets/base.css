@@ -48,11 +48,3 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--steel-soft);flex-
 .b-failed{background:rgba(229,154,154,.14);color:var(--bad)}
 
 .test-ribbon{background:var(--warn);color:var(--navy-900);font-size:13px;font-weight:600;text-align:center;padding:8px 16px}
-
-/* Test (mock) provider pages */
-body.mock{min-height:100vh;display:flex;flex-direction:column;align-items:center;background:var(--navy-950)}
-.mock-banner{width:100%;background:var(--warn);color:var(--navy-900);font-weight:600;text-align:center;padding:10px;font-size:14px}
-.mock-card{margin:auto;width:min(420px,calc(100% - 32px));background:var(--navy-800);border:1px solid var(--line);border-radius:18px;padding:32px;display:grid;gap:14px}
-.mock-brand{font-family:var(--display);font-size:14px;letter-spacing:.2em;text-transform:uppercase;color:var(--steel-soft)}
-.mock-card h1{font-size:28px}
-.stack{display:grid;gap:12px;margin-top:8px}

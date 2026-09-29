@@ -10,7 +10,7 @@ const mockSessions = new Map();
 export async function createCheckout({ contract, productName, email, successUrl, cancelUrl }) {
   if (mock.stripe) {
     const id = `mock_cs_${randomUUID().slice(0, 8)}`;
-    mockSessions.set(id, { id, status: "open", payment_status: "unpaid", metadata: { contractId: String(contract.id) }, successUrl, cancelUrl });
+    mockSessions.set(id, { id, status: "open", payment_status: "unpaid", metadata: { contractId: String(contract.id) }, successUrl, cancelUrl, amount: contract.price_ore, productName, email });
     return { id, url: `/mock/kort?id=${id}` };
   }
   const session = await stripe.checkout.sessions.create({
@@ -33,6 +33,12 @@ export async function createCheckout({ contract, productName, email, successUrl,
     cancel_url: cancelUrl,
   }, { idempotencyKey: `checkout-${contract.number}-${Date.now()}` });
   return { id: session.id, url: session.url };
+}
+
+// Mock-only: what the simulated checkout page shows.
+export function mockInfo(id) {
+  const s = mockSessions.get(id);
+  return s && s.status === "open" ? { amount: s.amount, productName: s.productName, email: s.email, cancelUrl: s.cancelUrl } : null;
 }
 
 export function mockDecide(id, approve) {
