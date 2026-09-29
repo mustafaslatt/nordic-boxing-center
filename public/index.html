@@ -79,9 +79,10 @@ a{color:inherit;text-decoration:none}
 .hero::before{z-index:1}
 .hero-grid{position:relative;z-index:2;display:grid;grid-template-columns:1.15fr .85fr;gap:56px;align-items:center}
 /* Background video from the club's original site (YouTube), with a navy shade for legible text */
-.hero-video{position:absolute;inset:0;overflow:hidden;background:var(--navy-900) center/cover no-repeat;filter:saturate(.55)}
-.hero-video iframe{position:absolute;top:50%;left:50%;width:max(125%,222vh);height:max(125%,70.3vw);transform:translate(-50%,-50%);border:0;pointer-events:none;opacity:0;transition:opacity .5s ease}
-.hero-video.playing iframe{opacity:1}
+.hero-video{position:absolute;inset:0;overflow:hidden;background:var(--navy-900);filter:saturate(.55)}
+.hero-video video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
+/* No browser UI over the background video (e.g. iOS play button when Low Power Mode blocks autoplay) */
+.hero-video video::-webkit-media-controls,.hero-video video::-webkit-media-controls-start-playback-button,.hero-video video::-webkit-media-controls-overlay-play-button{display:none!important;-webkit-appearance:none}
 .hero-shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(6,14,26,.93) 0%,rgba(10,22,40,.8) 45%,rgba(10,22,40,.5) 100%),linear-gradient(0deg,rgba(10,22,40,.95) 0%,transparent 35%)}
 .eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:13px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--steel-soft)}
 .eyebrow::before{content:"";width:28px;height:1px;background:currentColor}
@@ -299,7 +300,11 @@ footer{border-top:1px solid var(--line);padding:40px 0;background:var(--navy-950
 <main id="innhold">
   <!-- HERO -->
   <section class="hero" id="top">
-    <div class="hero-video" id="hero-video" aria-hidden="true" style="background-image:url('https://i.ytimg.com/vi/Lf4Fcxou_pE/maxresdefault.jpg')"><div id="yt-bg"></div></div>
+    <div class="hero-video" aria-hidden="true">
+      <video id="hero-video" autoplay muted loop playsinline preload="auto" disablepictureinpicture disableremoteplayback tabindex="-1">
+        <source src="/assets/NBC.mp4" type="video/mp4">
+      </video>
+    </div>
     <div class="hero-shade" aria-hidden="true"></div>
     <div class="wrap hero-grid">
       <div>
@@ -662,40 +667,17 @@ footer{border-top:1px solid var(--line);padding:40px 0;background:var(--navy-950
   const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); } }), {threshold:.12});
   document.querySelectorAll(".reveal").forEach((el,i) => { el.style.transitionDelay = (i % 4) * 60 + "ms"; io.observe(el); });
 
-  // Hero background video: same clip and segment (1–9 s, muted) as the original site,
-  // looping continuously. Jumping back just before the end avoids YouTube's end-screen stall.
+  // Hero background video (the club's original clip): always playing, muted, looped.
+  // If the browser blocks or pauses playback, retry on the next interaction or tab return.
   (function heroVideo(){
-    const box = document.getElementById("hero-video");
-    const START = 1, LOOP_AT = 8.8;
-    window.onYouTubeIframeAPIReady = () => {
-      new YT.Player("yt-bg", {
-        host: "https://www.youtube-nocookie.com",
-        videoId: "Lf4Fcxou_pE",
-        playerVars: { autoplay: 1, mute: 1, controls: 0, start: START, playsinline: 1, rel: 0, disablekb: 1, fs: 0, iv_load_policy: 3 },
-        events: {
-          onReady: (e) => {
-            const p = e.target;
-            p.getIframe().setAttribute("tabindex", "-1");
-            p.mute();
-            p.playVideo();
-            setInterval(() => { if (p.getCurrentTime && p.getCurrentTime() >= LOOP_AT) p.seekTo(START, true); }, 100);
-          },
-          onStateChange: (e) => {
-            // Show the video only while it actually plays, so YouTube's own play/pause
-            // overlays (e.g. when a phone blocks autoplay) never appear over the still frame.
-            const S = YT.PlayerState;
-            if (e.data === S.PLAYING) box.classList.add("playing");
-            else if (e.data !== S.BUFFERING) box.classList.remove("playing");
-            // Never stay stopped: resume after a pause (e.g. background tab) or an unexpected end.
-            if (e.data === YT.PlayerState.ENDED) e.target.seekTo(START, true);
-            if (e.data === YT.PlayerState.PAUSED || e.data === YT.PlayerState.ENDED) e.target.playVideo();
-          },
-        },
-      });
-    };
-    const tag = document.createElement("script");
-    tag.src = "https://www.youtube.com/iframe_api";
-    document.head.appendChild(tag);
+    const v = document.getElementById("hero-video");
+    v.muted = true;
+    const play = () => { const p = v.play(); if (p) p.catch(() => {}); };
+    v.addEventListener("pause", () => { if (!document.hidden) play(); });
+    document.addEventListener("visibilitychange", () => { if (!document.hidden) play(); });
+    ["touchstart", "pointerdown", "scroll", "keydown"].forEach((ev) =>
+      window.addEventListener(ev, play, { once: true, passive: true }));
+    play();
   })();
 
   document.getElementById("year").textContent = now.getFullYear();
