@@ -1,0 +1,58 @@
+/* Shared tokens and components for bli-medlem, admin and test pages (same palette as index.html) */
+:root{
+  --navy-950:#060e1a;--navy-900:#0a1628;--navy-800:#10223b;--navy-700:#183153;--navy-600:#23426b;
+  --steel:#6f8fb8;--steel-soft:#a9bdd6;
+  --grey-50:#f3f4f6;--grey-100:#e6e8ec;--grey-200:#d3d7de;--grey-400:#9aa2ae;--grey-500:#7a8391;--grey-700:#4a525e;
+  --line:rgba(169,189,214,.14);
+  --ok:#8fc3a4;--warn:#d9b77f;--bad:#e59a9a;
+  --display:"Oswald",system-ui,sans-serif;--body:"Inter",system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
+body{font-family:var(--body);background:var(--navy-900);color:var(--grey-100);line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--steel-soft);outline-offset:3px;border-radius:6px}
+h1,h2,h3{font-family:var(--display);text-transform:uppercase;font-weight:600;color:#fff;letter-spacing:.02em;line-height:1.1}
+.muted{color:var(--grey-400)}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:12px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--steel-soft)}
+.eyebrow::before{content:"";width:24px;height:1px;background:currentColor}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;font:inherit;font-weight:600;font-size:15px;padding:13px 22px;border-radius:10px;border:1px solid transparent;cursor:pointer;text-decoration:none;transition:background .2s,border-color .2s,opacity .2s;background:transparent;color:inherit}
+.btn-primary{background:var(--grey-50);color:var(--navy-900)}
+.btn-primary:hover{background:#fff}
+.btn-ghost{border-color:rgba(169,189,214,.3);color:#fff}
+.btn-ghost:hover{border-color:var(--steel-soft);background:rgba(169,189,214,.06)}
+.btn-danger{border-color:rgba(229,154,154,.4);color:var(--bad)}
+.btn-danger:hover{background:rgba(229,154,154,.08)}
+.btn-sm{padding:8px 14px;font-size:13px}
+.btn[disabled],.btn.loading{opacity:.55;pointer-events:none}
+.btn svg{width:18px;height:18px}
+
+label{display:grid;gap:6px;font-size:13px;font-weight:500;color:var(--grey-400)}
+input,select,textarea{font:inherit;font-size:15px;color:#fff;background:var(--navy-950);border:1px solid var(--line);border-radius:10px;padding:11px 13px;width:100%}
+textarea{resize:vertical;line-height:1.55}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--steel)}
+input[type=checkbox]{width:18px;height:18px;accent-color:var(--steel-soft);flex-shrink:0;margin-top:2px}
+.check{display:flex;gap:12px;align-items:flex-start;font-size:14px;color:var(--grey-200);cursor:pointer}
+
+.card{background:var(--navy-800);border:1px solid var(--line);border-radius:18px;padding:28px}
+.alert{padding:14px 16px;border-radius:12px;font-size:14px;border:1px solid}
+.alert-bad{background:rgba(229,154,154,.08);border-color:rgba(229,154,154,.35);color:#f3c6c6}
+.alert-info{background:rgba(169,189,214,.08);border-color:rgba(169,189,214,.3);color:var(--grey-100)}
+.alert-warn{background:rgba(217,183,127,.08);border-color:rgba(217,183,127,.35);color:#f0dcb8}
+
+.badge{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:4px 9px;border-radius:999px;white-space:nowrap}
+.b-active,.b-paid{background:rgba(143,195,164,.14);color:var(--ok)}
+.b-pending_payment,.b-pending{background:rgba(217,183,127,.14);color:var(--warn)}
+.b-cancelled,.b-refunded{background:rgba(154,162,174,.16);color:var(--grey-400)}
+.b-failed{background:rgba(229,154,154,.14);color:var(--bad)}
+
+.test-ribbon{background:var(--warn);color:var(--navy-900);font-size:13px;font-weight:600;text-align:center;padding:8px 16px}
+
+/* Test (mock) provider pages */
+body.mock{min-height:100vh;display:flex;flex-direction:column;align-items:center;background:var(--navy-950)}
+.mock-banner{width:100%;background:var(--warn);color:var(--navy-900);font-weight:600;text-align:center;padding:10px;font-size:14px}
+.mock-card{margin:auto;width:min(420px,calc(100% - 32px));background:var(--navy-800);border:1px solid var(--line);border-radius:18px;padding:32px;display:grid;gap:14px}
+.mock-brand{font-family:var(--display);font-size:14px;letter-spacing:.2em;text-transform:uppercase;color:var(--steel-soft)}
+.mock-card h1{font-size:28px}
+.stack{display:grid;gap:12px;margin-top:8px}
