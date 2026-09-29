@@ -12,6 +12,10 @@ services:
     envVars:
       - key: NODE_VERSION
         value: "24"
+      # Demo only: Render sets NODE_ENV=production, which otherwise refuses simulated
+      # BankID/Vipps/card. Remove this once the real keys are added.
+      - key: ALLOW_TEST_MODE
+        value: "true"
       - key: ADMIN_EMAIL
         sync: false
       - key: ADMIN_PASSWORD

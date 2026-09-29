@@ -58,7 +58,12 @@ export const mock = {
   stripe: !config.stripe.secretKey,
 };
 
+// A demo deployment must opt in explicitly with ALLOW_TEST_MODE=true; otherwise production
+// refuses to start with simulated providers, so fake payments can never reach a live site.
 if (config.production && (mock.bankid || mock.vipps || mock.stripe)) {
   const missing = Object.entries(mock).filter(([, m]) => m).map(([k]) => k).join(", ");
-  throw new Error(`NODE_ENV=production, men nøkler mangler for: ${missing}. Testmodus er ikke tillatt i produksjon.`);
+  if (env.ALLOW_TEST_MODE !== "true") {
+    throw new Error(`NODE_ENV=production, men nøkler mangler for: ${missing}. Testmodus er ikke tillatt i produksjon (sett ALLOW_TEST_MODE=true for en demo).`);
+  }
+  console.warn(`⚠ Demo: produksjon kjører i testmodus for ${missing} (ALLOW_TEST_MODE=true).`);
 }
